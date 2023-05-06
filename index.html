@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Usuário</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- CSS customizado -->
+    <style>
+      label.required:after {
+        content:"*";
+        color:red;
+      }
+    </style>
+  <body>                        
+    <form>
+
+        <div class="container mt-4">
+            <h2 class="mb-4">Cadastro de Usuário</h2>
+            <form>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label class="required" for="inputFirstName">Primeiro Nome</label>
+                  <input type="text" class="form-control" id="inputFirstName" required>
+                </div>
+                <div class="form-group col-md-6">
+                  <label class="required" for="inputLastName">Último Nome</label>
+                  <input type="text" class="form-control" id="inputLastName" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label class="required" for="inputEmail">E-mail</label>
+                  <input type="email" class="form-control" id="inputEmail" required>
+                </div>
+                <div class="form-group col-md-6">
+                  <label class="required" for="inputPassword">Senha</label>
+                  <input type="password" class="form-control" id="inputPassword" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label class="required" for="inputAddress">Endereço</label>
+                  <input type="text" class="form-control" id="inputAddress" required>
+                </div>
+                <div class="form-group col-md-2">
+                  <label class="required" for="inputNumber">Número</label>
+                  <input type="text" class="form-control" id="inputNumber" required>
+                </div>
+                <div class="form-group col-md-4">
+                  <label class="required" for="inputState">UF</label>
+                  <select id="uf" class="form-control" required>
+                  </div>
+                    <div class="form-group col-md-6">
+                      <label class="required" for="inputState">Cidade</label>
+                      <select id="cidade" class="form-control" required>
+                        
+                      </div>
+                        <div class="form-group col-md-6">
+                          <label class="required" for="inputState">Cidade</label>
+                          <select id="cidade" class="form-control" required>
+                          </div>
+                            <div class="form-group col-md-6">
+                              <label class="required" for="inputState">Bairros</label>
+                              <select id="bairro" class="form-control" required>
+                                <br>
+                                <form>
+                                  <button type="submit" style="background-color: blue; 
+                                  color: white;">Cadastrar</button>
+                                </form>
+                              </div>
+                              <div class="form-group col-md-6">
+                                <label class="required" for="inputState">Bairros</label>
+                                <select id="bairro" class="form-control" required>
+    
+
+<form id="cadastro-form">
+    <!-- seus campos de cadastro aqui -->
+    <button type="submit">Cadastrar</button>
+  </form>
+  
+
+    </form>
+
+    <script>
+        const select = document.getElementById('uf');
+        const url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados';
+        
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            data.forEach(uf => {
+              const option = document.createElement('option');
+              option.value = uf.sigla;
+              option.textContent = uf.sigla;
+              select.appendChild(option);
+            });
+          });
+        </script>
+        
+    
+      
+        <script>
+            const ufSelect = document.getElementById('uf');
+            const cidadeSelect = document.getElementById('cidade');
+            const bairroSelect = document.getElementById('bairro');
+          
+            ufSelect.addEventListener('change', event => {
+              const uf = event.target.value;
+              cidadeSelect.disabled = true;
+              bairroSelect.disabled = true;
+              cidadeSelect.innerHTML = '<option value="">Selecione uma cidade</option>';
+              bairroSelect.innerHTML = '<option value="">Selecione um bairro</option>';
+              if (uf !== '') {
+                const cidadeUrl = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`;
+                fetch(cidadeUrl)
+                  .then(response => response.json())
+                  .then(cidades => {
+                    cidades.forEach(cidade => {
+                      const option = document.createElement('option');
+                      option.value = cidade.id;
+                      option.text = cidade.nome;
+                      cidadeSelect.add(option);
+                    });
+                    cidadeSelect.disabled = false;
+                  });
+              }
+            });
+          
+            cidadeSelect.addEventListener('change', event => {
+              const cidade = event.target.value;
+              bairroSelect.enable = true;
+              bairroSelect.innerHTML = '<option value="">Selecione um bairro</option>';
+              if (cidade !== '') {
+                const bairroUrl = `https://servicodados.ibge.gov.br/api/v1/localidades/distritos`;
+                fetch(bairroUrl)
+                  .then(response => response.json())
+                  .then(bairros => {
+                    bairros.forEach(bairro => {
+                      const option = document.createElement('option');
+                      option.value = bairro.id;
+                      option.text = bairro.nome;
+                      bairroSelect.add(option);
+                    });
+                    bairroSelect.disabled = false;
+                  });
+              }
+            });
+          </script>
+      
+  </body>
+</html>
